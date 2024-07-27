@@ -352,7 +352,7 @@ Create a Kinesis Data Firehose to deliver CDC coming from MSK Serverless to S3
    For example,
    ![msk-serverless-firehose-s3-01](assets/msk-serverless-firehose-s3-01.png)
    ![msk-serverless-firehose-s3-02](assets/msk-serverless-firehose-s3-02.png)
-   You can extract records from the chosen object using [Amazon S3 Select on objects](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-select.html), as shown below:
+   You will be able to find records like the following from the selected object:
    <pre>
    {
      "before": null,
