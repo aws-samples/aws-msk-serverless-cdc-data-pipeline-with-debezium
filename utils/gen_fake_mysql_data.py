@@ -39,8 +39,8 @@ DB_URL_FMT = 'mysql+pymysql://{user}:{password}@{host}?autocommit=True'
 def main():
   parser = argparse.ArgumentParser()
 
-  parser.add_argument('--region-name', action='store', default='us-east-1',
-    help='aws region name (default: us-east-1)')
+  parser.add_argument('--region-name', action='store', default='us-west-2',
+    help='aws region name (default: us-west-2)')
   parser.add_argument('--host', action='store', help='database host')
   parser.add_argument('-u', '--user', action='store', help='user name')
   parser.add_argument('-p', '--password', action='store', help='password')

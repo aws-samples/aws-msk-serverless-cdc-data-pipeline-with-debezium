@@ -2,8 +2,6 @@
 # -*- encoding: utf-8 -*-
 # vim: tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 
-import boto3
-
 import aws_cdk as cdk
 
 from aws_cdk import (
@@ -13,23 +11,10 @@ from aws_cdk import (
 from constructs import Construct
 
 
-def get_msk_cluster_arn(msk_cluster_name, region_name):
-  client = boto3.client('kafka', region_name=region_name)
-  response = client.list_clusters_v2(ClusterNameFilter=msk_cluster_name)
-  cluster_info_list = [e for e in response['ClusterInfoList'] if e['ClusterName'] == msk_cluster_name]
-  if not cluster_info_list:
-    cluster_arn = f"arn:aws:kafka:{cdk.Aws.REGION}:{cdk.Aws.ACCOUNT_ID}:cluster/{msk_cluster_name}/*"
-  else:
-    cluster_arn = cluster_info_list[0]['ClusterArn']
-  return cluster_arn
-
-
 class MSKClusterPolicyStack(Stack):
 
-  def __init__(self, scope: Construct, construct_id: str, vpc, msk_cluster_name, **kwargs) -> None:
+  def __init__(self, scope: Construct, construct_id: str, msk_cluster_arn: str, **kwargs) -> None:
     super().__init__(scope, construct_id, **kwargs)
-
-    msk_cluster_arn = get_msk_cluster_arn(msk_cluster_name, vpc.env.region)
 
     msk_cluster_policy = {
       "Version": "2012-10-17",
@@ -49,7 +34,6 @@ class MSKClusterPolicyStack(Stack):
       cluster_arn=msk_cluster_arn,
       policy=msk_cluster_policy
     )
-
 
     cdk.CfnOutput(self, 'MSKClusterPolicyCurrentVersion', value=cfn_cluster_policy.attr_current_version,
       export_name=f'{self.stack_name}-ClusterPolicyCurrentVersion')

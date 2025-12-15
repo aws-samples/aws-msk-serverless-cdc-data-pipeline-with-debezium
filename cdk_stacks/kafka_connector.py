@@ -157,18 +157,13 @@ class KafkaConnectorStack(Stack):
 
     #XXX: For more information about Debezium connector, see the following url:
     # https://docs.aws.amazon.com/msk/latest/developerguide/mkc-debeziumsource-connector-example.html
+    # NOTE: Debezium MySQL connector only supports tasks.max=1, so we use provisioned capacity
+    # with a single worker instead of auto-scaling to avoid "Only a single connector task may be started" error
     msk_connector = aws_kafkaconnect.CfnConnector(self, "KafkaCfnConnector",
       capacity=aws_kafkaconnect.CfnConnector.CapacityProperty(
-        auto_scaling=aws_kafkaconnect.CfnConnector.AutoScalingProperty(
-          max_worker_count=2,
+        provisioned_capacity=aws_kafkaconnect.CfnConnector.ProvisionedCapacityProperty(
           mcu_count=1,
-          min_worker_count=1,
-          scale_in_policy=aws_kafkaconnect.CfnConnector.ScaleInPolicyProperty(
-            cpu_utilization_percentage=20
-          ),
-          scale_out_policy=aws_kafkaconnect.CfnConnector.ScaleOutPolicyProperty(
-            cpu_utilization_percentage=80
-          )
+          worker_count=1
         )
       ),
       connector_configuration={

@@ -40,8 +40,7 @@ msk_stack = MSKServerlessStack(app, 'MSKServerlessStack',
 msk_stack.add_dependency(aurora_mysql_stack)
 
 msk_policy_stack = MSKClusterPolicyStack(app, 'MSKClusterPolicy',
-  vpc_stack.vpc,
-  msk_stack.msk_cluster_name,
+  msk_stack.msk_cluster_arn,
   env=AWS_ENV
 )
 msk_policy_stack.add_dependency(msk_stack)
